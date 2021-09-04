@@ -9,6 +9,9 @@
 .define BG2_MAP_SIZE        0700
 .define BG_BUFFER_SIZE      0800
 
+; game
+.define LEVEL_SIZE          0700 ; 64x28
+
 ; joypad
 .define JOY_A       0080
 .define JOY_AL        80

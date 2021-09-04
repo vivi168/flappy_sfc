@@ -115,3 +115,13 @@
     lda #01
     sta MDMAEN
 .endm
+
+.macro RESET_OFFSET bghofs, bgvofs
+    lda #00         ; first write = lower byte
+    sta %bghofs     ; horizontal scroll ;
+    sta %bghofs     ; second write = upper 2 bits
+    lda #ff         ; vertical scroll. caution, offset by -1
+    sta %bgvofs
+    lda #00
+    sta %bgvofs
+.endm

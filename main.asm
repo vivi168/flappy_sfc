@@ -29,7 +29,20 @@ MainLoop:
     jsr @PutScore
 
     jsr @HandleInput
+    jsr @WrapHorizontalOffset
 
     jmp @MainLoop
+
+WrapHorizontalOffset:
+    .call M16
+    inc @horizontal_offset
+    lda @horizontal_offset
+    cmp #0200
+    bcc @skip_wrap_horizontal_offset
+    stz @horizontal_offset
+
+skip_wrap_horizontal_offset:
+    .call M8
+    rts
 
 .include info.asm

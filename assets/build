@@ -1,6 +1,8 @@
 #!/bin/bash
 
-superfamiconv -i bg2.png -p bg2.pal -t bg2.tiles -m bg2.map --out-tiles-image bg2.tiles.png --color-zero 00000000
+superfamiconv -i bg2.png -p bg2.pal -t bg2.tiles -m bg2.map --out-tiles-image bg2.tiles.png --color-zero 00000000 -v
+superfamiconv map -i bg2.png -p bg2.pal -t bg2.tiles -P 1 -v -d bg2.map
+
 ruby -I../../SNES_Utils/lib/ ../../SNES_Utils/bin/png2snes -f sprites.png -b 4
 ruby -I../../SNES_Utils/lib/ ../../SNES_Utils/bin/png2snes -f bg1.png -b 4
 
