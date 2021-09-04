@@ -39,7 +39,7 @@ LevelToBG1Buffer:
     ldx #0000
     stx @buffer_offset
     jsr @CopyHalf
-    ldx #0800
+    ldx #BG_BUFFER_SIZE
     stx @buffer_offset
     ldx #0020
     jsr @CopyHalf
@@ -85,7 +85,7 @@ skip_next_row:
     .call M8
 
     inx
-    cpx #0380
+    cpx #HALF_LEVEL_SIZE
     bne @level_to_bg1_buffer_loop
 
     rts

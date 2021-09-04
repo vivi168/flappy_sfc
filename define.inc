@@ -12,6 +12,7 @@
 
 ; game
 .define LEVEL_SIZE          0700 ; 64x28
+.define HALF_LEVEL_SIZE     0380 ; 32x28
 
 ; joypad
 .define JOY_A       0080
