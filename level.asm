@@ -53,11 +53,19 @@ clear_buffer_loop:
 
 LevelToBG1Buffer:
     jsr @ClearBG1Buffer
-
     ldx #0000
+    stx @buffer_offset
+    jsr @CopyHalf
+    ldx #0800
+    stx @buffer_offset
+    ldx #0020
+    jsr @CopyHalf
+
+    rts
+
+CopyHalf:
     stx @next_tile
 
-    ; First half
     ldx #0000
     brk 00
 level_to_bg1_buffer_loop:
@@ -65,6 +73,8 @@ level_to_bg1_buffer_loop:
     .call M16
     txa
     asl
+    clc
+    adc @buffer_offset
     tay
     .call M8
 
@@ -92,7 +102,5 @@ skip_next_row:
     inx
     cpx #0380
     bne @level_to_bg1_buffer_loop
-
-    ; second half
 
     rts
