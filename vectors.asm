@@ -33,14 +33,14 @@ FastReset:
     lda #02
     sta BG34NBA         ; BG3 tiles @ VRAM[4000]
 
-    lda #28
-    sta BG1SC           ; BG1 MAP @ VRAM[5000]
-
-    lda #2c
-    sta BG2SC           ; BG2 MAP @ VRAM[5800]
+    lda #29
+    sta BG1SC           ; BG1 MAP @ VRAM[5000], 64x32 = 01
 
     lda #30
-    sta BG3SC           ; BG3 MAP @ VRAM[6000]
+    sta BG2SC           ; BG2 MAP @ VRAM[6000]
+
+    lda #34
+    sta BG3SC           ; BG3 MAP @ VRAM[6800]
 
     lda #13             ; enable BG12 + sprites (0b10011)
     sta TM
@@ -52,14 +52,14 @@ FastReset:
 ;  ---- Some initialization
     jsr @InitOamBuffer
     jsr @InitLevel
-    jsr @ClearBG1Buffer
+    jsr @LevelToBG1Buffer
 
 ;  ---- DMA Transfers
     .call VRAM_DMA_TRANSFER 0000, bg1_tiles, BG1_TILES_SIZE
     .call VRAM_DMA_TRANSFER 1000, bg2_tiles, BG2_TILES_SIZE           ; VRAM[0x2000] (word step)
     .call VRAM_DMA_TRANSFER 4000, sprites_tiles, SPRITES_TILES_SIZE   ; VRAM[0x8000] (word step)
 
-    .call VRAM_DMA_TRANSFER 2c00, bg2_map, BG2_MAP_SIZE
+    .call VRAM_DMA_TRANSFER 3000, bg2_map, BG2_MAP_SIZE
 
     .call CGRAM_DMA_TRANSFER 00, bg1_pal, BG_PALETTES_SIZE
     .call CGRAM_DMA_TRANSFER 80, sprites1_pal, SPRITES_PALETTES_SIZE  ; CGRAM[0x100] (word step)

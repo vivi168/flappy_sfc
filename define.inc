@@ -8,6 +8,7 @@
 .define SPRITES_PALETTES_SIZE 40
 .define BG2_MAP_SIZE        0700
 .define BG_BUFFER_SIZE      0800
+.define BG1_BUFFER_SIZE     1000
 
 ; game
 .define LEVEL_SIZE          0700 ; 64x28

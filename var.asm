@@ -17,7 +17,7 @@ level_tiles:              .rb LEVEL_SIZE
 .org 7e2000
 
 bg_buffers:
-bg1_buffer:               .rb 800
+bg1_buffer:               .rb 1000
 bg3_buffer:               .rb 800
 oam_buffer:               .rb 200
 oam_buffer_hi:            .rb 20
