@@ -55,24 +55,44 @@ LevelToBG1Buffer:
     jsr @ClearBG1Buffer
 
     ldx #0000
+    stx @next_tile
 
+    ; First half
+    ldx #0000
     brk 00
 level_to_bg1_buffer_loop:
-    lda @level_tiles,x
     phx
-    pha
-
     .call M16
     txa
     asl
-    tax
+    tay
     .call M8
 
-    pla
+    ldx @next_tile
+    lda @level_tiles,x
+
+    tyx
     sta !bg1_buffer,x
+
+    .call M16
+    inc @next_tile
+    lda @next_tile
+    and #001f
+    cmp #001f
+    bne @skip_next_row
+
+    lda @next_tile
+    clc
+    adc #0020
+    sta @next_tile
+skip_next_row:
+    .call M8
 
     plx
     inx
-    cpx #0700
+    cpx #0380
     bne @level_to_bg1_buffer_loop
+
+    ; second half
+
     rts
