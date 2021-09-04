@@ -35,24 +35,7 @@ fill_ground_loop:
 PlacePillar:
     rts
 
-ClearBG1Buffer:
-    php
-    .call MX16
-
-    ldx #0000
-clear_buffer_loop:
-    lda #0000
-    sta !bg1_buffer,x
-    inx
-    inx
-    cpx #BG1_BUFFER_SIZE
-    bne @clear_buffer_loop
-
-    plp
-    rts
-
 LevelToBG1Buffer:
-    jsr @ClearBG1Buffer
     ldx #0000
     stx @buffer_offset
     jsr @CopyHalf
@@ -67,7 +50,6 @@ CopyHalf:
     stx @next_tile
 
     ldx #0000
-    brk 00
 level_to_bg1_buffer_loop:
     phx
     .call M16
@@ -83,10 +65,14 @@ level_to_bg1_buffer_loop:
 
     tyx
     sta !bg1_buffer,x
+    inx
+    lda #00
+    sta !bg1_buffer,x
 
     .call M16
     inc @next_tile
-    lda @next_tile
+    plx
+    txa
     and #001f
     cmp #001f
     bne @skip_next_row
@@ -98,7 +84,6 @@ level_to_bg1_buffer_loop:
 skip_next_row:
     .call M8
 
-    plx
     inx
     cpx #0380
     bne @level_to_bg1_buffer_loop
