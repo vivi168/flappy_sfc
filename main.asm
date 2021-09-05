@@ -38,7 +38,7 @@ WrapHorizontalOffset:
     inc @horizontal_offset
     lda @horizontal_offset
     cmp #0200
-    bcc @skip_wrap_horizontal_offset
+    bne @skip_wrap_horizontal_offset
     stz @horizontal_offset
 
 skip_wrap_horizontal_offset:

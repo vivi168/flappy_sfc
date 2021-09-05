@@ -125,3 +125,18 @@
     lda #00
     sta %bgvofs
 .endm
+
+.macro RESERVE_STACK_FRAME size
+    tsc
+    sec
+    sbc #%size
+    tcs
+    tcd
+.endm
+
+.macro RESTORE_STACK_FRAME size
+    tsc
+    clc
+    adc #%size
+    tcs
+.endm

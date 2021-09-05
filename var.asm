@@ -12,8 +12,9 @@ horizontal_offset:        .rb 2
 hex_to_dec_in:            .rb 2
 hex_to_dec_out:           .rb 3
 
-next_tile:                .rb 2
-buffer_offset:            .rb 2
+next_column_read:         .rb 2
+next_column_write:        .rb 2
+
 level_tiles:              .rb LEVEL_SIZE
 
 .org 7e2000

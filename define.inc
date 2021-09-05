@@ -11,8 +11,9 @@
 .define BG1_BUFFER_SIZE     1000
 
 ; game
-.define LEVEL_SIZE          0700 ; 64x28
-.define HALF_LEVEL_SIZE     0380 ; 32x28
+.define LEVEL_WIDTH         0046 ; 70
+.define LEVEL_HEIGHT        001c ; 28
+.define BUFFER_WIDTH        0040 ; 64
 
 ; joypad
 .define JOY_A       0080

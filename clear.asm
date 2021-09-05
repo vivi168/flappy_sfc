@@ -96,6 +96,9 @@ ClearRegisters:
     stz @joy1_press
     stz @joy1_held
     stz @horizontal_offset
+
+    stz @next_column_read
+    stz @next_column_write
     .call M8
 
     stz @frame_counter

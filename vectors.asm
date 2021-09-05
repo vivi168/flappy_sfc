@@ -52,7 +52,8 @@ FastReset:
 ;  ---- Some initialization
     jsr @InitOamBuffer
     jsr @InitLevel
-    jsr @LevelToBG1Buffer
+    jsr @PlacePillar
+    jsr @Copy48Columns
 
 ;  ---- DMA Transfers
     .call VRAM_DMA_TRANSFER 0000, bg1_tiles, BG1_TILES_SIZE
