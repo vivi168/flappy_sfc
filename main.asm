@@ -42,6 +42,14 @@ WrapHorizontalOffset:
     stz @horizontal_offset
 
 skip_wrap_horizontal_offset:
+
+    ; copy new column each time we scroll 8px
+    bit #0007
+    bne @skip_copy_column
+
+    jsr @CopyColumn
+
+skip_copy_column:
     .call M8
     rts
 

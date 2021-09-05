@@ -51,8 +51,11 @@ copy_48_columns_loop:
     rts
 
 CopyColumn:
+    php
     phx
     phd
+
+    .call M8
 
     ; stack frame
     .call RESERVE_STACK_FRAME 04
@@ -95,6 +98,7 @@ copy_column_loop:
     pld
 
     plx
+    plp
     rts
 
 IncNextColumnReadWrite:
