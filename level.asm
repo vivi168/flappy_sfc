@@ -32,7 +32,8 @@ fill_ground_loop:
     .call M8
     rts
 
-PlacePillar:
+SpawnPillar:
+    ; TODO
     rts
 
 ; Copy first 48 columns

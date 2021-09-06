@@ -52,7 +52,7 @@ FastReset:
 ;  ---- Some initialization
     jsr @InitOamBuffer
     jsr @InitLevel
-    jsr @PlacePillar
+    jsr @SpawnPillar
     jsr @Copy48Columns
 
 ;  ---- DMA Transfers
