@@ -16,6 +16,7 @@ next_column_read:         .rb 2
 next_column_write:        .rb 2
 
 pillar_disable:           .rb 1
+next_pillar_at:           .rb 1
 
 level_tiles:              .rb LEVEL_SIZE
 

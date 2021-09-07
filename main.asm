@@ -58,6 +58,7 @@ skip_wrap_horizontal_offset:
     bne @skip_copy_column
 
     jsr @CopyColumn
+    .call M8
     inc @pillar_disable
 
 skip_copy_column:
@@ -66,12 +67,13 @@ skip_copy_column:
 
 CheckSpawnPillar:
     lda @pillar_disable
-    cmp #10
+    cmp #SPAWN_PILLAR_DELAY
     bne @skip_spawn_pillar
-    stz @pillar_disable
     jsr @SpawnPillar
+    rts
 
 skip_spawn_pillar:
+    inc @pillar_disable
     rts
 
 .include info.asm

@@ -33,7 +33,41 @@ fill_ground_loop:
     rts
 
 SpawnPillar:
-    ; TODO
+    lda @next_pillar_at
+    .call M16
+    and #00ff
+    tax
+    .call M8
+    stz 01
+
+
+    ldy #0000
+spawn_pillar_loop:
+
+    lda #09 ; left part
+    sta @level_tiles,x
+
+    inx     ; middle part (0a)
+    inc
+    sta @level_tiles,x
+
+    inx     ; right part (0b)
+    inc
+    sta @level_tiles,x
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    iny
+    cpy #PILLAR_HEIGHT
+    bne @spawn_pillar_loop
+
+    jsr @IncNextPillarAt
+
     rts
 
 ; Copy first 48 columns
@@ -125,5 +159,21 @@ check_next_column_write_2:
 next_column_copy:
     sta @next_column_write
     .call M8
+
+    rts
+
+IncNextPillarAt:
+    lda @next_pillar_at
+    clc
+    adc #PILLAR_SPACE
+    cmp #LEVEL_WIDTH8
+    bcc @exit_inc_next_pillar_at
+
+    sec
+    sbc #LEVEL_WIDTH8
+exit_inc_next_pillar_at:
+    sta @next_pillar_at
+
+    stz @pillar_disable
 
     rts

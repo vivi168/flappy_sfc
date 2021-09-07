@@ -52,6 +52,8 @@ FastReset:
 ;  ---- Some initialization
     jsr @InitOamBuffer
     jsr @InitLevel
+    lda #43
+    sta @next_pillar_at
     jsr @SpawnPillar
     jsr @Copy48Columns
 
