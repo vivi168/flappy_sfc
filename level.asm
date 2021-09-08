@@ -75,18 +75,17 @@ exit_spawn_pillar:
 
     rts
 
-; Copy first 48 columns
-Copy48Columns:
+CopyInitialColumns:
     ldx #0000
     stx @next_column_read
     stx @next_column_write
 
-copy_48_columns_loop:
+copy_initial_columns_loop:
     jsr @CopyColumn
 
     inx
-    cpx #0022   ; copy first 48 columns
-    bne @copy_48_columns_loop
+    cpx #0022
+    bne @copy_initial_columns_loop
 
     rts
 
