@@ -65,8 +65,6 @@ skip_wrap_horizontal_offset:
     bne @skip_copy_column
 
     jsr @CopyColumn
-    .call M8
-
 skip_copy_column:
     .call M8
     rts
