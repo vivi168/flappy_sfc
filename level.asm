@@ -85,7 +85,7 @@ copy_48_columns_loop:
     jsr @CopyColumn
 
     inx
-    cpx #0030   ; copy first 48 columns
+    cpx #0022   ; copy first 48 columns
     bne @copy_48_columns_loop
 
     rts

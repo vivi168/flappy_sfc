@@ -22,6 +22,10 @@
 .include music.asm
 
 MenuLoop:
+; if A -> record current (horizontal_offset // 8) + 67 (=> first spawn pillar)
+;      -> spawn pillar
+;      -> next spawn pillar @ first_spawn_pillar + 10, wrap at 70
+;      -> jmp to MainLoop
     jsr @WaitNextVBlank
 
     jsr @CheckSpawnPillar
@@ -37,23 +41,20 @@ start_game:
     inc @pillar_enable
 
     lda @next_pillar_at
-    cmp @next_column_read
-    bcs @issou
+; rire:
+;     clc
+;     adc #PILLAR_SPACE
+;     cmp @next_column_read
+;     bcc @rire
 
-rire:
-    clc
-    adc #PILLAR_SPACE
+;     clc
+;     adc #PILLAR_SPACE
+
     cmp #LEVEL_WIDTH8
-    bcc @skip_wrap
+    bcc @issou
 
     sec
     sbc #LEVEL_WIDTH8
-    bra @issou
-
-skip_wrap:
-    cmp @next_column_read
-    bcc @rire
-
 issou:
     sta @next_pillar_at
 
