@@ -34,3 +34,49 @@ set_x_msb:
 
     plp
     rts
+
+FlappyToOam:
+    lda @flappy_x
+    sta !oam_buffer     ; x
+    lda @flappy_y
+    sta !oam_buffer+1   ; y
+
+    lda #00
+    sta !oam_buffer+2   ; tile number
+
+    lda #30             ; 00110000
+    sta !oam_buffer+3   ; vhppcccn
+
+    lda #54
+    sta !oam_buffer_hi
+
+    rts
+
+ApplyPhysics:
+    .call M16
+    ; velocity += gravity
+    inc @flappy_v
+
+    ; position += velocity
+    lda @flappy_y
+    and #00ff
+    asl
+    asl
+    clc
+    adc @flappy_v
+    lsr
+    lsr
+    sta @flappy_y
+    .call M8
+
+
+    ; if (pipes.intersectsWith(bird) || land.intersectsWith(bird)) {
+    ;     chec if touches grass (01) or pipe
+    ;     die();
+    ; }
+
+    ; if (position < 0) {
+    ;     check if touches ground (02)
+    ;     position = 0;
+    ; }
+    rts

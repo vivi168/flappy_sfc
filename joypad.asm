@@ -22,4 +22,17 @@ read_joy1_data:
     rts
 
 HandleInput:
+    lda @joy1_press
+    bit #JOY_AL
+    bne @flap_wings
+    rts
+
+    ; velocity = jumpVelocity
+flap_wings:
+    .call M16
+    lda #fff4
+    sta @flappy_v
+    .call M8
+
+
     rts

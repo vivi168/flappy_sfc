@@ -15,9 +15,13 @@ hex_to_dec_out:           .rb 3
 next_column_read:         .rb 2
 next_column_write:        .rb 2
 
-pillar_enable:           .rb 1
+pillar_enable:            .rb 1
 spawn_pillar_delay:       .rb 1
 next_pillar_at:           .rb 1
+
+flappy_x:                 .rb 2
+flappy_y:                 .rb 2
+flappy_v:                 .rb 2
 
 level_tiles:              .rb LEVEL_SIZE
 

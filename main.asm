@@ -24,8 +24,9 @@
 MenuLoop:
     jsr @WaitNextVBlank
 
-    jsr @CheckSpawnPillar
-    jsr @WrapHorizontalOffset
+    ; jsr @CheckSpawnPillar
+    ; jsr @WrapHorizontalOffset
+    jsr @FlappyToOam
 
     lda @joy1_press
     bit #JOY_AL
@@ -45,6 +46,9 @@ MainLoop:
     jsr @PutScore
     jsr @CheckSpawnPillar
     jsr @WrapHorizontalOffset
+
+    jsr @ApplyPhysics
+    jsr @FlappyToOam
 
     jsr @HandleInput
 
