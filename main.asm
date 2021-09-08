@@ -24,12 +24,38 @@
 MenuLoop:
     jsr @WaitNextVBlank
 
-    ; if A -> record current (horizontal_offset // 8) + 67 (=> first spawn pillar)
-    ;      -> spawn pillar
-    ;      -> next spawn pillar @ first_spawn_pillar + 10, wrap at 70
-    ;      -> jmp to MainLoop
+    jsr @CheckSpawnPillar
+    jsr @WrapHorizontalOffset
+
+    lda @joy1_press
+    bit #JOY_AL
+    bne @start_game
 
     jmp @MenuLoop
+
+start_game:
+    inc @pillar_enable
+
+    lda @next_pillar_at
+    cmp @next_column_read
+    bcs @issou
+
+rire:
+    clc
+    adc #PILLAR_SPACE
+    cmp #LEVEL_WIDTH8
+    bcc @skip_wrap
+
+    sec
+    sbc #LEVEL_WIDTH8
+    bra @issou
+
+skip_wrap:
+    cmp @next_column_read
+    bcc @rire
+
+issou:
+    sta @next_pillar_at
 
 MainLoop:
     jsr @WaitNextVBlank
@@ -37,9 +63,9 @@ MainLoop:
     jsr @EncodeScore
     jsr @PutScore
     jsr @CheckSpawnPillar
+    jsr @WrapHorizontalOffset
 
     jsr @HandleInput
-    jsr @WrapHorizontalOffset
 
     jmp @MainLoop
 
@@ -48,7 +74,7 @@ WrapHorizontalOffset:
     inc @horizontal_offset
     lda @horizontal_offset
     cmp #0200
-    bne @skip_wrap_horizontal_offset
+    bcc @skip_wrap_horizontal_offset
     stz @horizontal_offset
 
 skip_wrap_horizontal_offset:
@@ -59,21 +85,20 @@ skip_wrap_horizontal_offset:
 
     jsr @CopyColumn
     .call M8
-    inc @pillar_disable
 
 skip_copy_column:
     .call M8
     rts
 
 CheckSpawnPillar:
-    lda @pillar_disable
+    lda @spawn_pillar_delay
     cmp #SPAWN_PILLAR_DELAY
-    bne @skip_spawn_pillar
+    bcc @skip_spawn_pillar
     jsr @SpawnPillar
     rts
 
 skip_spawn_pillar:
-    inc @pillar_disable
+    inc @spawn_pillar_delay
     rts
 
 .include info.asm

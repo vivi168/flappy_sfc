@@ -101,6 +101,9 @@ ClearRegisters:
     stz @next_column_write
     .call M8
 
+    lda #39
+    sta @next_pillar_at
     stz @frame_counter
+    stz @pillar_enable
 
     rts

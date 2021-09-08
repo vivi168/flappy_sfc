@@ -33,6 +33,10 @@ fill_ground_loop:
     rts
 
 SpawnPillar:
+    lda @pillar_enable
+    beq @exit_spawn_pillar
+
+    ; todo spawn pillar column by column
     lda @next_pillar_at
     .call M16
     and #00ff
@@ -66,6 +70,7 @@ spawn_pillar_loop:
     cpy #PILLAR_HEIGHT
     bne @spawn_pillar_loop
 
+exit_spawn_pillar:
     jsr @IncNextPillarAt
 
     rts
@@ -174,6 +179,6 @@ IncNextPillarAt:
 exit_inc_next_pillar_at:
     sta @next_pillar_at
 
-    stz @pillar_disable
+    stz @spawn_pillar_delay
 
     rts
