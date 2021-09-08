@@ -22,10 +22,6 @@
 .include music.asm
 
 MenuLoop:
-; if A -> record current (horizontal_offset // 8) + 67 (=> first spawn pillar)
-;      -> spawn pillar
-;      -> next spawn pillar @ first_spawn_pillar + 10, wrap at 70
-;      -> jmp to MainLoop
     jsr @WaitNextVBlank
 
     jsr @CheckSpawnPillar
@@ -38,25 +34,9 @@ MenuLoop:
     jmp @MenuLoop
 
 start_game:
+    ; bug here. sometimes pillar is not copied
+    ; completely (race condition ?)
     inc @pillar_enable
-
-    lda @next_pillar_at
-; rire:
-;     clc
-;     adc #PILLAR_SPACE
-;     cmp @next_column_read
-;     bcc @rire
-
-;     clc
-;     adc #PILLAR_SPACE
-
-    cmp #LEVEL_WIDTH8
-    bcc @issou
-
-    sec
-    sbc #LEVEL_WIDTH8
-issou:
-    sta @next_pillar_at
 
 MainLoop:
     jsr @WaitNextVBlank
