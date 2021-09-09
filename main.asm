@@ -35,8 +35,12 @@ MenuLoop:
     jmp @MenuLoop
 
 start_game:
-    ; bug here. sometimes pillar is not copied
-    ; completely (race condition ?)
+    ; random seed
+    lda @frame_counter
+    sta @next_rand
+    eor #ff
+    sta @next_rand+1
+
     inc @pillar_enable
 
 MainLoop:

@@ -76,27 +76,11 @@ skip_keep_in_bound:
     ;     die();
     ; }
 
-    jsr @IntersectsWithGround
+    jsr @CheckCollision
 
     rts
 
-IntersectsWithPillars:
-    .call M16
-    lda #FLAPPY_X16
-    clc
-    adc @horizontal_offset
-    lsr
-    lsr
-    lsr
-
-    tax
-
-    .call M8
-    rts
-
-IntersectsWithGround:
-    brk 00
-
+CheckCollision:
     lda @flappy_y
     lsr
     lsr
@@ -113,7 +97,7 @@ IntersectsWithGround:
     clc
     adc @flappy_mx
     clc
-    adc #0010
+    adc #0008
     lsr
     lsr
     lsr
@@ -126,8 +110,30 @@ IntersectsWithGround:
     .call M8
 
     lda @level_tiles,x
+    cmp #0c
+    beq @score_up
+
+    cmp #0d
+    beq @score_enable
+
+    lda @level_tiles,x
     bne @Die
 
+    bra @exit_collision
+
+score_up:
+    lda @score_disable
+    bne @exit_collision
+    .call M16
+    inc @score
+    .call M8
+    inc @score_disable
+    bra @exit_collision
+
+score_enable:
+    stz @score_disable
+
+exit_collision:
     rts
 
 Die:

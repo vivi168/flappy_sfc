@@ -105,10 +105,16 @@ ClearRegisters:
     sta @flappy_y
     stz @flappy_v
 
+    stz @score
+
     .call M8
+
+    stz @score_disable
 
     lda #2f
     sta @next_pillar_at
+    lda #06
+    sta @next_pillar_height
     stz @frame_counter
     stz @pillar_enable
 

@@ -19,9 +19,15 @@ next_column_write:        .rb 2
 pillar_enable:            .rb 1
 spawn_pillar_delay:       .rb 1
 next_pillar_at:           .rb 1
+next_pillar_height_top:   .rb 1
+next_pillar_height_bot:   .rb 1
 
 flappy_y:                 .rb 2
 flappy_v:                 .rb 2
+
+score:                    .rb 2
+score_disable:            .rb 1
+next_rand:                .rb 2
 
 level_tiles:              .rb LEVEL_SIZE
 

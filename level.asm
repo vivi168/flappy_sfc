@@ -33,22 +33,63 @@ fill_ground_loop:
     rts
 
 SpawnPillar:
-    lda @pillar_enable
-    beq @exit_spawn_pillar
+    .call RESERVE_STACK_FRAME 04
+    ; 01/02 pillar top height
+    ; 03/04 pillar bot height
+    ; 05/06 next_pillar_at
+    jsr @NextPillarHeight
 
-    ; todo spawn pillar column by column
+    lda @pillar_enable
+    bne @continue_spawn_pillar
+    jmp @exit_spawn_pillar
+continue_spawn_pillar:
     lda @next_pillar_at
     .call M16
     and #00ff
-    clc
-    adc #0230
     tax
+    stx 05
     .call M8
-    stz 01
 
+    lda @next_pillar_height_top
+    dec
+    dec
+    sta 01
+    stz 02
+    lda @next_pillar_height_bot
+    dec
+    dec
+    sta 03
+    stz 04
+
+; clear pillar
 
     ldy #0000
-spawn_pillar_loop:
+clear_pillar_loop:
+
+    lda #00 ; left part
+    sta @level_tiles,x
+
+    inx     ; middle part
+    sta @level_tiles,x
+
+    inx     ; right part
+    sta @level_tiles,x
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    iny
+    cpy #PILLAR_HEIGHT
+    bne @clear_pillar_loop
+
+; spawn pillar top
+    ldx 05
+    ldy #0000
+spawn_pillar_top_loop:
 
     lda #09 ; left part
     sta @level_tiles,x
@@ -69,12 +110,139 @@ spawn_pillar_loop:
     .call M8
 
     iny
-    cpy #PILLAR_HEIGHT
-    bne @spawn_pillar_loop
+    cpy 01
+    bne @spawn_pillar_top_loop
+
+; bottleneck top
+    lda #f9
+    sta @level_tiles,x ; left part
+
+    inx
+    dec
+    sta @level_tiles,x ; middle part
+
+    inx
+    dec
+    sta @level_tiles,x ; right part
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    lda #fc
+    sta @level_tiles,x ; left part
+
+    inx
+    dec
+    sta @level_tiles,x ; middle part
+
+    inx
+    dec
+    sta @level_tiles,x ; right part
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+; score / opening
+    ldy #0000
+spawn_opening_loop:
+    lda #00
+    sta @level_tiles,x ; left part
+
+    inx
+    lda #0c
+    sta @level_tiles,x ; middle part
+
+    inx
+    lda #0d
+    sta @level_tiles,x ; right part
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    iny
+    cpy #0006
+    bne @spawn_opening_loop
+
+; bottleneck bottom
+    lda #03
+    sta @level_tiles,x ; left part
+
+    inx
+    inc
+    sta @level_tiles,x ; middle part
+
+    inx
+    inc
+    sta @level_tiles,x ; right part
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    lda #06
+    sta @level_tiles,x ; left part
+
+    inx
+    inc
+    sta @level_tiles,x ; middle part
+
+    inx
+    inc
+    sta @level_tiles,x ; right part
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+
+; spawn pillar bottom
+    ldy #0000
+spawn_pillar_bot_loop:
+
+    lda #09 ; left part
+    sta @level_tiles,x
+
+    inx     ; middle part (0a)
+    inc
+    sta @level_tiles,x
+
+    inx     ; right part (0b)
+    inc
+    sta @level_tiles,x
+
+    .call M16
+    txa
+    clc
+    adc #PILLAR_WRAP
+    tax
+    .call M8
+
+    iny
+    cpy 03
+    bne @spawn_pillar_bot_loop
 
 exit_spawn_pillar:
     jsr @IncNextPillarAt
 
+    .call RESTORE_STACK_FRAME 04
     rts
 
 CopyInitialColumns:
@@ -94,11 +262,7 @@ copy_initial_columns_loop:
 CopyColumn:
     php
     phx
-    phd
-
     .call M8
-
-    ; stack frame
     .call RESERVE_STACK_FRAME 04
     ldx @next_column_read
     stx 01
@@ -134,10 +298,7 @@ copy_column_loop:
 
     jsr @IncNextColumnReadWrite
 
-    ; restore stack frame
     .call RESTORE_STACK_FRAME 04
-    pld
-
     plx
     plp
     rts
@@ -171,7 +332,7 @@ next_column_copy:
 IncNextPillarAt:
     lda @next_pillar_at
     clc
-    adc #PILLAR_SPACE
+    adc #PILLAR_SPACING
     cmp #LEVEL_WIDTH8
     bcc @exit_inc_next_pillar_at
 
@@ -183,3 +344,38 @@ exit_inc_next_pillar_at:
     stz @spawn_pillar_delay
 
     rts
+
+NextPillarHeight:
+    ; here, also generate next pillar height
+    jsr @Random
+    lda @next_rand
+    and #07
+    inc
+    inc
+    inc
+    inc
+
+    brk 00
+    sta @next_pillar_height_top
+
+    lda #11 ; pillar height - opening
+    sec
+    sbc @next_pillar_height_top
+    sta @next_pillar_height_bot
+
+    rts
+
+; Xorshift algorithm
+Random:
+	lda @next_rand+1
+	lsr
+	lda @next_rand
+	ror
+	eor @next_rand+1
+	sta @next_rand+1 ; high part of x ^= x << 7 done
+	ror              ; A has now x >> 9 and high bit comes from low byte
+	eor @next_rand   ; x ^= x >> 9 and the low part of x ^= x << 7 done
+	sta @next_rand
+	eor @next_rand+1
+	sta @next_rand+1 ; x ^= x << 8 done
+	rts

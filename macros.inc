@@ -127,6 +127,8 @@
 .endm
 
 .macro RESERVE_STACK_FRAME size
+    phd
+
     tsc
     sec
     sbc #%size
@@ -139,4 +141,6 @@
     clc
     adc #%size
     tcs
+
+    pld
 .endm
