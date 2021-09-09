@@ -113,7 +113,7 @@ CheckCollision:
     cmp #0c
     beq @score_up
 
-    cmp #0d
+    cmp #f3
     beq @score_enable
 
     lda @level_tiles,x

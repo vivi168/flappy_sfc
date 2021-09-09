@@ -161,7 +161,7 @@ spawn_opening_loop:
     sta @level_tiles,x ; middle part
 
     inx
-    lda #0d
+    lda #f3
     sta @level_tiles,x ; right part
 
     .call M16
@@ -263,7 +263,10 @@ CopyColumn:
     php
     phx
     .call M8
-    .call RESERVE_STACK_FRAME 04
+    .call RESERVE_STACK_FRAME 05
+    ; 01/02 -> next_column_read
+    ; 03/04 -> next_column_write
+    ; 05 -> tile props
     ldx @next_column_read
     stx 01
     ldx @next_column_write
@@ -271,13 +274,22 @@ CopyColumn:
 
     ldy #0000
 copy_column_loop:
+    stz 05
     ldx 01
     lda @level_tiles,x
 
+    bpl @carry_on_copy
+    eor #ff
+    pha
+    lda #80
+    sta 05
+    pla
+
+carry_on_copy:
     ldx 03
     sta !bg_buffers,x
     inx
-    lda #00
+    lda 05
     sta !bg_buffers,x
 
     .call M16
@@ -298,7 +310,7 @@ copy_column_loop:
 
     jsr @IncNextColumnReadWrite
 
-    .call RESTORE_STACK_FRAME 04
+    .call RESTORE_STACK_FRAME 05
     plx
     plp
     rts
