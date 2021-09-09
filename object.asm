@@ -75,16 +75,66 @@ skip_keep_in_bound:
     ;     chec if touches grass (01) or pipe
     ;     die();
     ; }
+
+    jsr @IntersectsWithGround
+
     rts
 
 IntersectsWithPillars:
+    .call M16
+    lda @flappy_x
+    clc
+    adc @horizontal_offset
+    lsr
+    lsr
+    lsr
 
+    tax
+
+    .call M8
     rts
 
 IntersectsWithGround:
+    brk 00
+
+    lda @flappy_y
+    lsr
+    lsr
+    lsr
+
+    sta M7A
+    stz M7A
+
+    lda #LEVEL_WIDTH8
+    sta M7B
+
+    .call M16
+    lda @flappy_x
+    clc
+    adc @flappy_mx
+    clc
+    adc #0010
+    lsr
+    lsr
+    lsr
+
+    clc
+    adc MPYL
+
+    ; lda MPYL
+    tax
+    .call M8
+
+
+    lda @level_tiles,x
+    bne @Die
+
     rts
 
 Die:
     ; falls until touches ground.
     ; show final score
+die_loop:
+    bra @die_loop
+
     rts

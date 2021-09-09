@@ -11,7 +11,7 @@
 .define BG1_BUFFER_SIZE     1000
 
 ; game
-.define SPAWN_PILLAR_DELAY    0a
+.define SPAWN_PILLAR_DELAY    50 ; 80
 .define PILLAR_SPACE          0a
 .define LEVEL_WIDTH8          46
 .define PILLAR_HEIGHT       0017

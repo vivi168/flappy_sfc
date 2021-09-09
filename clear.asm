@@ -96,6 +96,7 @@ ClearRegisters:
     stz @joy1_press
     stz @joy1_held
     stz @horizontal_offset
+    stz @flappy_mx
 
     stz @next_column_read
     stz @next_column_write

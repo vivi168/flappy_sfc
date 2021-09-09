@@ -30,6 +30,11 @@ fill_ground_loop:
     bne @fill_ground_loop
 
     .call M8
+
+    lda #01
+    ldx #0045
+    sta @level_tiles,x
+
     rts
 
 SpawnPillar:
@@ -40,6 +45,8 @@ SpawnPillar:
     lda @next_pillar_at
     .call M16
     and #00ff
+    clc
+    adc #0230
     tax
     .call M8
     stz 01

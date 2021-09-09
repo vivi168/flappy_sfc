@@ -56,6 +56,8 @@ MainLoop:
 
 WrapHorizontalOffset:
     .call M16
+    jsr @WrapFlappyMX
+
     inc @horizontal_offset
     lda @horizontal_offset
     cmp #0200
@@ -71,6 +73,17 @@ skip_wrap_horizontal_offset:
     jsr @CopyColumn
 skip_copy_column:
     .call M8
+    rts
+
+WrapFlappyMX:
+    inc @flappy_mx
+    lda @flappy_mx
+
+    cmp #0230
+    bcc @skip_wrap_flappy_mx
+    stz @flappy_mx
+
+skip_wrap_flappy_mx:
     rts
 
 CheckSpawnPillar:

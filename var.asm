@@ -8,6 +8,7 @@ frame_counter:            .rb 1
 vblank_disable:           .rb 1
 
 horizontal_offset:        .rb 2
+flappy_mx:                .rb 2
 
 hex_to_dec_in:            .rb 2
 hex_to_dec_out:           .rb 3
