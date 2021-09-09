@@ -42,7 +42,35 @@ skip_bit:
     rts
 
 EncodeScore:
-    rts
+    ldx @score
+    stx @hex_to_dec_in
+    jsr @HexToDec
 
-PutScore:
+    ; units
+    lda @hex_to_dec_out
+    and #0f
+    sta @score_bcd+4
+
+    ; tens
+    lda @hex_to_dec_out
+    and #f0
+    .call LSR4
+    sta @score_bcd+3
+
+    ; hundreds
+    lda @hex_to_dec_out+1
+    and #0f
+    sta @score_bcd+2
+
+    ; thousands
+    lda @hex_to_dec_out+1
+    and #f0
+    .call LSR4
+    sta @score_bcd+1
+
+    ; ten thousands
+    lda @hex_to_dec_out+2
+    and #0f
+    sta @score_bcd
+
     rts

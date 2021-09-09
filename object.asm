@@ -35,6 +35,9 @@ set_x_msb:
     plp
     rts
 
+; TODO : maintain a list of object to render
+; loop through it, set corrects props
+; set correct oam_buff_hi props
 FlappyToOam:
     lda #FLAPPY_X
     sta !oam_buffer     ; x
@@ -52,94 +55,6 @@ FlappyToOam:
 
     rts
 
-ApplyPhysics:
-    .call M16
-    ; velocity += gravity
-    inc @flappy_v
-
-    ; position += velocity
-    lda @flappy_y
-    asl
-    asl
-    clc
-    adc @flappy_v
-    bpl @skip_keep_in_bound
-    lda #0000
-skip_keep_in_bound:
-    lsr
-    lsr
-    sta @flappy_y
-    .call M8
-
-    ; if (pipes.intersectsWith(bird) || land.intersectsWith(bird)) {
-    ;     chec if touches grass (01) or pipe
-    ;     die();
-    ; }
-
-    jsr @CheckCollision
-
-    rts
-
-CheckCollision:
-    lda @flappy_y
-    lsr
-    lsr
-    lsr
-
-    sta M7A
-    stz M7A
-
-    lda #LEVEL_WIDTH8
-    sta M7B
-
-    .call M16
-    lda #FLAPPY_X16
-    clc
-    adc @flappy_mx
-    clc
-    adc #0008
-    lsr
-    lsr
-    lsr
-
-    clc
-    adc MPYL
-
-    ; lda MPYL
-    tax
-    .call M8
-
-    lda @level_tiles,x
-    cmp #0c
-    beq @score_up
-
-    cmp #f3
-    beq @score_enable
-
-    lda @level_tiles,x
-    bne @Die
-
-    bra @exit_collision
-
-score_up:
-    lda @score_disable
-    bne @exit_collision
-    .call M16
-    inc @score
-    .call M8
-    inc @score_disable
-    bra @exit_collision
-
-score_enable:
-    stz @score_disable
-
-exit_collision:
-    rts
-
-Die:
-    ; falls until touches ground.
-    ; show final score
-die_loop:
-    bra @die_loop
-
+PutScore:
+    ; TODO
     rts

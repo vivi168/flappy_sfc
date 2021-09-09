@@ -26,6 +26,7 @@
 ; joypad
 .define JOY_A       0080
 .define JOY_AL        80
+.define JOY_BH        80
 .define JOY_START   1000
 .define JOY_STARTH    10
 

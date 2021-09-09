@@ -25,6 +25,7 @@ next_pillar_height_bot:   .rb 1
 flappy_y:                 .rb 2
 flappy_v:                 .rb 2
 
+score_bcd:                .rb 5
 score:                    .rb 2
 score_disable:            .rb 1
 next_rand:                .rb 2

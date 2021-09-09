@@ -101,4 +101,98 @@ skip_spawn_pillar:
     inc @spawn_pillar_delay
     rts
 
+ApplyPhysics:
+    .call M16
+    ; velocity += gravity
+    inc @flappy_v
+
+    ; position += velocity
+    lda @flappy_y
+    asl
+    asl
+    clc
+    adc @flappy_v
+    bpl @skip_keep_in_bound
+    lda #0000
+skip_keep_in_bound:
+    lsr
+    lsr
+    sta @flappy_y
+    .call M8
+
+    jsr @CheckCollision
+
+    rts
+
+CheckCollision:
+    lda @flappy_y
+    lsr
+    lsr
+    lsr
+
+    sta M7A
+    stz M7A
+
+    lda #LEVEL_WIDTH8
+    sta M7B
+
+    .call M16
+    lda #FLAPPY_X16
+    clc
+    adc @flappy_mx
+    clc
+    adc #0008
+    lsr
+    lsr
+    lsr
+
+    clc
+    adc MPYL
+
+    ; lda MPYL
+    tax
+    .call M8
+
+    lda @level_tiles,x
+    cmp #0c
+    beq @score_up
+
+    cmp #f3
+    beq @score_enable
+
+    lda @level_tiles,x
+    bne @DieLoop
+
+    bra @exit_collision
+
+score_up:
+    lda @score_disable
+    bne @exit_collision
+    .call M16
+    inc @score
+    .call M8
+    inc @score_disable
+    bra @exit_collision
+
+score_enable:
+    stz @score_disable
+
+exit_collision:
+    rts
+
+DieLoop:
+    ; TODO: death animation
+    ; falls until touches ground.
+    ; show final score
+    jsr @WaitNextVBlank
+
+    lda @joy1_press+1
+    bit #JOY_BH
+    bne @reset_game
+
+    jmp @DieLoop
+
+reset_game:
+    jmp @ResetVector
+
 .include info.asm
