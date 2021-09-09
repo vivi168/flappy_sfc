@@ -59,24 +59,32 @@ ApplyPhysics:
 
     ; position += velocity
     lda @flappy_y
-    and #00ff
     asl
     asl
     clc
     adc @flappy_v
+    bpl @skip_keep_in_bound
+    lda #0000
+skip_keep_in_bound:
     lsr
     lsr
     sta @flappy_y
     .call M8
 
-
     ; if (pipes.intersectsWith(bird) || land.intersectsWith(bird)) {
     ;     chec if touches grass (01) or pipe
     ;     die();
     ; }
+    rts
 
-    ; if (position < 0) {
-    ;     check if touches ground (02)
-    ;     position = 0;
-    ; }
+IntersectsWithPillars:
+
+    rts
+
+IntersectsWithGround:
+    rts
+
+Die:
+    ; falls until touches ground.
+    ; show final score
     rts
