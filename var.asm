@@ -20,7 +20,6 @@ pillar_enable:            .rb 1
 spawn_pillar_delay:       .rb 1
 next_pillar_at:           .rb 1
 
-flappy_x:                 .rb 2
 flappy_y:                 .rb 2
 flappy_v:                 .rb 2
 

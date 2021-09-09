@@ -19,6 +19,8 @@
 .define LEVEL_WIDTH         0046 ; 70
 .define LEVEL_HEIGHT        001c ; 28
 .define BUFFER_WIDTH        0040 ; 64
+.define FLAPPY_X              60
+.define FLAPPY_X16          0060
 
 ; joypad
 .define JOY_A       0080

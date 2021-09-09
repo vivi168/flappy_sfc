@@ -28,12 +28,7 @@ fill_ground_loop:
     inx
     cpx #07a8
     bne @fill_ground_loop
-
     .call M8
-
-    lda #01
-    ldx #0045
-    sta @level_tiles,x
 
     rts
 

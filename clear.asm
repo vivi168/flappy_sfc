@@ -101,8 +101,6 @@ ClearRegisters:
     stz @next_column_read
     stz @next_column_write
 
-    lda #0060
-    sta @flappy_x
     lda #0058
     sta @flappy_y
     stz @flappy_v

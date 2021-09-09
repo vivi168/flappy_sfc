@@ -36,7 +36,7 @@ set_x_msb:
     rts
 
 FlappyToOam:
-    lda @flappy_x
+    lda #FLAPPY_X
     sta !oam_buffer     ; x
     lda @flappy_y
     sta !oam_buffer+1   ; y
@@ -82,7 +82,7 @@ skip_keep_in_bound:
 
 IntersectsWithPillars:
     .call M16
-    lda @flappy_x
+    lda #FLAPPY_X16
     clc
     adc @horizontal_offset
     lsr
@@ -109,7 +109,7 @@ IntersectsWithGround:
     sta M7B
 
     .call M16
-    lda @flappy_x
+    lda #FLAPPY_X16
     clc
     adc @flappy_mx
     clc
@@ -124,7 +124,6 @@ IntersectsWithGround:
     ; lda MPYL
     tax
     .call M8
-
 
     lda @level_tiles,x
     bne @Die
