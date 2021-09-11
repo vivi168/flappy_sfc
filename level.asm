@@ -367,7 +367,6 @@ NextPillarHeight:
     inc
     inc
 
-    brk 00
     sta @next_pillar_height_top
 
     lda #11 ; pillar height - opening

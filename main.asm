@@ -1,5 +1,5 @@
 ;**************************************
-; SOKOBAN
+; FLAPPY BIRD
 ;**************************************
 .65816
 
@@ -120,12 +120,29 @@ skip_keep_in_bound:
     sta @flappy_y
     .call M8
 
+    tsx
+    pea 0808 ; X, Y
+    jsr @PositionOnTileMap
+    txs
     jsr @CheckCollision
+
+    jsr @CheckScore
 
     rts
 
-CheckCollision:
-    lda @flappy_y
+PositionOnTileMap:
+    phx
+    phd
+
+    tsc
+    tcd
+    ; stack frame
+    ; 07 -> Y
+    ; 08 -> X
+
+    lda 07
+    clc
+    adc @flappy_y
     lsr
     lsr
     lsr
@@ -137,11 +154,13 @@ CheckCollision:
     sta M7B
 
     .call M16
-    lda #FLAPPY_X16
+    lda 08
+    and #00ff
     clc
     adc @flappy_mx
     clc
-    adc #0008
+    adc #FLAPPY_X16
+
     lsr
     lsr
     lsr
@@ -149,10 +168,29 @@ CheckCollision:
     clc
     adc MPYL
 
-    ; lda MPYL
+    pld
+    plx
+    rts
+
+CheckCollision:
+    ; todo : check for X,Y, X+16,Y X,Y+16, (X+16, Y+16)
     tax
     .call M8
 
+    lda @level_tiles,x
+    cmp #0c
+    beq @exit_collision
+
+    cmp #f3
+    beq @exit_collision
+
+    lda @level_tiles,x
+    bne @DieLoop
+
+exit_collision:
+    rts
+
+CheckScore:
     lda @level_tiles,x
     cmp #0c
     beq @score_up
@@ -160,24 +198,20 @@ CheckCollision:
     cmp #f3
     beq @score_enable
 
-    lda @level_tiles,x
-    bne @DieLoop
-
-    bra @exit_collision
-
+    bra @exit_score_up
 score_up:
     lda @score_disable
-    bne @exit_collision
+    bne @exit_score_up
     .call M16
     inc @score
     .call M8
     inc @score_disable
-    bra @exit_collision
+    bra @exit_score_up
 
 score_enable:
     stz @score_disable
 
-exit_collision:
+exit_score_up:
     rts
 
 DieLoop:
