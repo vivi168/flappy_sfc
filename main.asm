@@ -120,29 +120,17 @@ skip_keep_in_bound:
     sta @flappy_y
     .call M8
 
-    tsx
-    pea 0808 ; X, Y
-    jsr @PositionOnTileMap
-    txs
     jsr @CheckCollision
-
-    jsr @CheckScore
 
     rts
 
-PositionOnTileMap:
-    phx
-    phd
-
-    tsc
-    tcd
-    ; stack frame
-    ; 07 -> Y
-    ; 08 -> X
-
-    lda 07
+; Take center of flappy.
+; check if on any non void tile -> Dead
+; check if on score tile -> score up
+CheckCollision:
+    lda @flappy_y
     clc
-    adc @flappy_y
+    adc #08
     lsr
     lsr
     lsr
@@ -154,10 +142,7 @@ PositionOnTileMap:
     sta M7B
 
     .call M16
-    lda 08
-    and #00ff
-    clc
-    adc @flappy_mx
+    lda @flappy_mx
     clc
     adc #FLAPPY_X16
 
@@ -168,29 +153,9 @@ PositionOnTileMap:
     clc
     adc MPYL
 
-    pld
-    plx
-    rts
-
-CheckCollision:
-    ; todo : check for X,Y, X+16,Y X,Y+16, (X+16, Y+16)
     tax
     .call M8
 
-    lda @level_tiles,x
-    cmp #0c
-    beq @exit_collision
-
-    cmp #f3
-    beq @exit_collision
-
-    lda @level_tiles,x
-    bne @DieLoop
-
-exit_collision:
-    rts
-
-CheckScore:
     lda @level_tiles,x
     cmp #0c
     beq @score_up
@@ -198,20 +163,24 @@ CheckScore:
     cmp #f3
     beq @score_enable
 
-    bra @exit_score_up
+    lda @level_tiles,x
+    bne @DieLoop
+
+    bra @exit_collision
+
 score_up:
     lda @score_disable
-    bne @exit_score_up
+    bne @exit_collision
     .call M16
     inc @score
     .call M8
     inc @score_disable
-    bra @exit_score_up
+    bra @exit_collision
 
 score_enable:
     stz @score_disable
 
-exit_score_up:
+exit_collision:
     rts
 
 DieLoop:

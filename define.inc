@@ -21,7 +21,7 @@
 .define LEVEL_HEIGHT        001c ; 28
 .define BUFFER_WIDTH        0040 ; 64
 .define FLAPPY_X              60
-.define FLAPPY_X16          0060
+.define FLAPPY_X16          0068 ; 0x60 + 8 (to get center of sprite)
 
 ; joypad
 .define JOY_A       0080
