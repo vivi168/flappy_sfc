@@ -24,8 +24,8 @@
 MenuLoop:
     jsr @WaitNextVBlank
 
-    ; jsr @CheckSpawnPillar
-    ; jsr @WrapHorizontalOffset
+    jsr @CheckSpawnPillar
+    jsr @WrapHorizontalOffset
     jsr @FlappyToOam
 
     lda @joy1_press
