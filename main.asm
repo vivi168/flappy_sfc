@@ -215,16 +215,36 @@ exit_score_up:
     rts
 
 DieLoop:
-    ; TODO: death animation
-    ; falls until touches ground.
-    ; show final score
+    ; TODO: show final score
+    jsr @WaitNextVBlank
+    jsr @FlappyToOam
+
+    .call M16
+    ; velocity += gravity
+    inc @flappy_v
+
+    ; position += velocity
+    lda @flappy_y
+    asl
+    asl
+    clc
+    adc @flappy_v
+    lsr
+    lsr
+    sta @flappy_y
+    .call M8
+    cmp #b3
+    bcs @DeadLoop
+    bra @DieLoop
+
+DeadLoop:
     jsr @WaitNextVBlank
 
     lda @joy1_press+1
     bit #JOY_BH
     bne @reset_game
 
-    jmp @DieLoop
+    jmp @DeadLoop
 
 reset_game:
     jmp @ResetVector
